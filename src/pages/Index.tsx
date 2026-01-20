@@ -155,7 +155,10 @@ const Index = () => {
             <h1 className="text-7xl font-bold bg-gradient-to-r from-[#9b87f5] via-[#D946EF] to-[#F97316] bg-clip-text text-transparent animate-scale-in" style={{ fontFamily: 'Orbitron, sans-serif' }}>
               ЭХОЛОТ
             </h1>
-            <p className="text-2xl text-gray-400 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              2D экшен-игра с видом сверху
+            </p>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
               Разрушенный мир. Магия пробудилась после катастрофы. Мутанты охотятся на выживших.
             </p>
             <div className="space-y-4">
@@ -220,12 +223,16 @@ const Index = () => {
           <div 
             className="relative w-full h-screen overflow-hidden"
             style={{
-              background: 'radial-gradient(ellipse at center, #221F26 0%, #1A1F2C 100%)',
+              background: 'linear-gradient(180deg, #1A1F2C 0%, #221F26 50%, #2A2532 100%)',
+              backgroundImage: `
+                repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(155, 135, 245, 0.03) 50px, rgba(155, 135, 245, 0.03) 51px),
+                repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(155, 135, 245, 0.03) 50px, rgba(155, 135, 245, 0.03) 51px)
+              `
             }}
           >
-            <div className="absolute inset-0 opacity-20">
-              <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#9b87f5] rounded-full blur-[120px] animate-pulse"></div>
-              <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F97316] rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-[#9b87f5] rounded-full blur-[150px]"></div>
+              <div className="absolute bottom-1/4 right-1/3 w-96 h-96 bg-[#D946EF] rounded-full blur-[150px]"></div>
             </div>
 
             <div 
@@ -237,17 +244,20 @@ const Index = () => {
               }}
             >
               <div className="relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#9b87f5] to-[#D946EF] rounded-lg rotate-45 animate-pulse shadow-2xl shadow-[#9b87f5]/50"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Icon name="User" size={24} className="-rotate-45" />
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#9b87f5] via-[#D946EF] to-[#7E69AB] shadow-2xl shadow-[#9b87f5]/50 border-2 border-[#D6BCFA]">
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-t from-transparent to-white/20"></div>
                 </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Icon name="User" size={20} className="text-white drop-shadow-lg" />
+                </div>
+                <div className="absolute -inset-2 rounded-full border border-[#9b87f5]/30 animate-ping" style={{ animationDuration: '2s' }}></div>
               </div>
             </div>
 
             {enemies.map(enemy => (
               <div
                 key={enemy.id}
-                className="absolute transition-all duration-500 z-10"
+                className="absolute transition-all duration-300 z-10"
                 style={{
                   left: `${enemy.x}%`,
                   top: `${enemy.y}%`,
@@ -255,12 +265,18 @@ const Index = () => {
                 }}
               >
                 <div className="relative group">
-                  <div className={`w-12 h-12 ${enemy.type === 'mutant' ? 'bg-red-600' : 'bg-orange-600'} rounded-lg rotate-45 shadow-xl animate-pulse`}></div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Icon name={enemy.type === 'mutant' ? 'Skull' : 'Bug'} size={20} className="-rotate-45 text-white" />
+                  <div className={`w-10 h-10 rounded-full shadow-xl ${
+                    enemy.type === 'mutant' 
+                      ? 'bg-gradient-to-br from-red-500 to-red-700 border-2 border-red-400' 
+                      : 'bg-gradient-to-br from-orange-500 to-orange-700 border-2 border-orange-400'
+                  }`}>
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-t from-transparent to-white/20"></div>
                   </div>
-                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-16">
-                    <Progress value={(enemy.health / enemy.maxHealth) * 100} className="h-1 bg-gray-700" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Icon name={enemy.type === 'mutant' ? 'Skull' : 'Bug'} size={18} className="text-white drop-shadow-lg" />
+                  </div>
+                  <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-14">
+                    <Progress value={(enemy.health / enemy.maxHealth) * 100} className="h-1.5 bg-gray-800 border border-gray-700" />
                   </div>
                 </div>
               </div>
