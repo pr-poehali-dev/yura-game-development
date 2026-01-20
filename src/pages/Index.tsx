@@ -3,6 +3,7 @@ import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { audioEngine } from '@/utils/audioEngine';
 
 type Ability = {
   id: string;
@@ -30,6 +31,7 @@ const Index = () => {
   const [enemies, setEnemies] = useState<Enemy[]>([]);
   const [gameStarted, setGameStarted] = useState(false);
   const [playerPos, setPlayerPos] = useState({ x: 50, y: 70 });
+  const [musicEnabled, setMusicEnabled] = useState(true);
   const [abilities, setAbilities] = useState<Ability[]>([
     { id: '1', name: 'Огненный шар', icon: 'Flame', color: '#F97316', cooldown: 2000, damage: 25, currentCooldown: 0 },
     { id: '2', name: 'Ледяной шип', icon: 'Snowflake', color: '#0EA5E9', cooldown: 3000, damage: 35, currentCooldown: 0 },
@@ -145,7 +147,28 @@ const Index = () => {
     setPlayerMana(100);
     setScore(0);
     setEnemies([]);
+    
+    if (musicEnabled) {
+      audioEngine.start();
+    }
   };
+
+  const toggleMusic = () => {
+    const newState = !musicEnabled;
+    setMusicEnabled(newState);
+    
+    if (newState && gameStarted) {
+      audioEngine.start();
+    } else {
+      audioEngine.stop();
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      audioEngine.stop();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1A1F2C] via-[#221F26] to-[#403E43] text-white overflow-hidden">
@@ -210,11 +233,19 @@ const Index = () => {
                     <span className="text-sm font-mono">{playerMana}/100</span>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold bg-gradient-to-r from-[#F97316] to-[#D946EF] bg-clip-text text-transparent" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-                    {score}
+                <div className="flex items-center gap-6">
+                  <button
+                    onClick={toggleMusic}
+                    className="p-3 rounded-full bg-[#403E43]/50 hover:bg-[#403E43] transition-colors border border-[#9b87f5]/30"
+                  >
+                    <Icon name={musicEnabled ? 'Volume2' : 'VolumeX'} size={20} className="text-[#9b87f5]" />
+                  </button>
+                  <div className="text-right">
+                    <div className="text-3xl font-bold bg-gradient-to-r from-[#F97316] to-[#D946EF] bg-clip-text text-transparent" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+                      {score}
+                    </div>
+                    <div className="text-sm text-gray-400">очков</div>
                   </div>
-                  <div className="text-sm text-gray-400">очков</div>
                 </div>
               </div>
             </div>
